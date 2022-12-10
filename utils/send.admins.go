@@ -16,7 +16,7 @@ func SendToAdmins(bot *tele.Bot, admins []string, order *models.Order) error {
 			continue
 		}
 		message := order.String()
-		_, err = bot.Send(tele.ChatID(id), message)
+		_, err = bot.Send(tele.ChatID(id), message, tele.ModeHTML)
 		if err != nil {
 			return fmt.Errorf("Ошибка отправки оповещения админам: %v", err)
 		}

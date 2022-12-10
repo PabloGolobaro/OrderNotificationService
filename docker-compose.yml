@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   mongodb:
     image: mongo
@@ -6,12 +6,29 @@ services:
     restart: always
     env_file:
       - app.env
-
     ports:
       - '6000:27017'
+    networks:
+      - app
     volumes:
       - mongodb:/data/db
+  server:
+    container_name: server
+    stop_signal: SIGINT
+    build: .
+    image: "pablogolobar/order_server:${VERSION}"
+    restart: always
+    env_file:
+      - app.env
+    ports:
+      - '${EXTERNAL_PORT}:${INTERNAL_PORT}'
+    networks:
+      - app
+    depends_on:
+      - mongodb
 
 volumes:
   mongodb:
-
+networks:
+  app:
+    driver: bridge
