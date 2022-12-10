@@ -5,6 +5,7 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"strings"
 	"time"
 )
 
@@ -29,6 +30,8 @@ func (o *OrderServiceImpl) SaveOrder(order *models.Order) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return res.InsertedID.(primitive.ObjectID).String(), nil
+	s := res.InsertedID.(primitive.ObjectID).String()
+	split := strings.Split(s, "\"")
+	return split[1], nil
 
 }

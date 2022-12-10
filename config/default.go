@@ -5,8 +5,10 @@ import (
 )
 
 type Config struct {
-	DBUri string `mapstructure:"MONGODB_LOCAL_URI"`
-	Port  string `mapstructure:"PORT"`
+	DBUri  string   `mapstructure:"MONGODB_LOCAL_URI"`
+	Port   string   `mapstructure:"PORT"`
+	Token  string   `mapstructure:"TOKEN"`
+	Admins []string `mapstructure:"ADMINS"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
