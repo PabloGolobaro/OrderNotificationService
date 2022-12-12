@@ -22,7 +22,7 @@ type OrderData struct {
 }
 
 type Order struct {
-	OrderId   string
+	OrderId   int `json:"order_id" bson:"order_id"`
 	Products  []Product
 	Data      OrderData
 	CreatedAt time.Time `json:"created_at" bson:"created_at"`
@@ -31,6 +31,7 @@ type Order struct {
 
 type DBResponse struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	OrderId   int                `json:"order_id" bson:"order_id"`
 	Products  []Product
 	Data      OrderData
 	CreatedAt time.Time `json:"created_at" bson:"created_at"`

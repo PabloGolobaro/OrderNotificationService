@@ -2,10 +2,9 @@ package services
 
 import (
 	"WhatsappOrderServer/models"
+	"WhatsappOrderServer/utils"
 	"context"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"strings"
 	"time"
 )
 
@@ -23,15 +22,19 @@ func NewOrderServiceImpl(collection *mongo.Collection, ctx context.Context) Orde
 	return &OrderServiceImpl{collection: collection, ctx: ctx}
 }
 
-func (o *OrderServiceImpl) SaveOrder(order *models.Order) (string, error) {
+func (o *OrderServiceImpl) SaveOrder(order *models.Order) (int, error) {
+
 	order.CreatedAt = time.Now()
 	order.UpdatedAt = order.CreatedAt
-	res, err := o.collection.InsertOne(o.ctx, &order)
+	orderNumber, err := utils.SetOrderNumber(o.collection, o.ctx)
+	order.OrderId = orderNumber
 	if err != nil {
-		return "", err
+		return 0, err
 	}
-	s := res.InsertedID.(primitive.ObjectID).String()
-	split := strings.Split(s, "\"")
-	return split[1], nil
+	_, err = o.collection.InsertOne(o.ctx, &order)
+	if err != nil {
+		return 0, err
+	}
+	return orderNumber, nil
 
 }

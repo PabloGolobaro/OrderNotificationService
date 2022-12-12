@@ -2,11 +2,10 @@ package services
 
 import (
 	"WhatsappOrderServer/config"
+	"WhatsappOrderServer/db"
 	"WhatsappOrderServer/models"
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"testing"
 	"time"
@@ -24,15 +23,10 @@ func TestOrderServiceImpl_SaveOrder(t *testing.T) {
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
-	clientOptions := options.Client().ApplyURI(config.DBUri)
-	mongoclient, err := mongo.Connect(test_fields.ctx, clientOptions)
+	mongoclient, err := db.NewMongoDBConnection(config, log.Default())
 	if err != nil {
-		panic(err)
+		return
 	}
-	if err := mongoclient.Ping(test_fields.ctx, readpref.Primary()); err != nil {
-		panic(err)
-	}
-	log.Println("MongoDB successfully connected...")
 	orderCollection := mongoclient.Database("golang_mongodb").Collection("orders")
 	test_fields.collection = orderCollection
 	//test_struct
@@ -50,11 +44,11 @@ func TestOrderServiceImpl_SaveOrder(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    string
+		want    int
 		wantErr bool
 	}{
 
-		{name: "First", fields: test_fields, args: arguments, want: "some", wantErr: false},
+		{name: "First", fields: test_fields, args: arguments, want: 5, wantErr: false},
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {

@@ -18,3 +18,10 @@ prod_build:
 server:
 	docker-compose up --no-start --force-recreate server
 	docker push pablogolobar/order_server:$(VERSION)
+
+rebuild:
+	docker rm server
+	docker rmi pablogolobar/order_server:$(VERSION)
+	docker build -t pablogolobar/order_server:$(VERSION) .
+	docker push pablogolobar/order_server:$(VERSION)
+

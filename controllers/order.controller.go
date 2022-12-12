@@ -41,7 +41,7 @@ func (oc *OrderController) SaveOrder(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": errMessage})
 		return
 	}
-	message := "Order ID - " + orderId
-	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "message": message})
+
+	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "ID": orderId})
 
 }

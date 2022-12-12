@@ -3,14 +3,13 @@ package main
 import (
 	"WhatsappOrderServer/config"
 	"WhatsappOrderServer/controllers"
+	"WhatsappOrderServer/db"
 	"WhatsappOrderServer/handlers"
 	"WhatsappOrderServer/routes"
 	"WhatsappOrderServer/services"
 	"context"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	tele "gopkg.in/telebot.v3"
 	"log"
 	"net/http"
@@ -61,19 +60,11 @@ func init() {
 	if err != nil {
 		logger.Fatal("Could not load environment variables", err)
 	}
-
-	ctx = context.TODO()
-	clientOptions := options.Client().ApplyURI(config.DBUri)
-	mongoclient, err = mongo.Connect(ctx, clientOptions)
+	mongoclient, err = db.NewMongoDBConnection(config, logger)
 	if err != nil {
-		panic(err)
+		return
 	}
 
-	if err := mongoclient.Ping(ctx, readpref.Primary()); err != nil {
-		panic(err)
-	}
-
-	logger.Println("MongoDB successfully connected...")
 	bot = NewBot(config)
 
 	// collections
