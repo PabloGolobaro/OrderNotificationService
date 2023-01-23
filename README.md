@@ -1,6 +1,6 @@
 # Order Notification Service
 
-## Simple REST API service with MongoDB to analyze POST requests data and resend it to messengers.
+## Simple REST API service with MongoDB to analyze POST requests data and notify on messengers.
 
 *It's currently supported only Telegram bot notification.*
 
