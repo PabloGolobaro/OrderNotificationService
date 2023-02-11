@@ -15,7 +15,7 @@ prod:
 prod_build:
 	docker-compose build
 
-server:
+push:
 	docker-compose up --no-start --force-recreate server
 	docker push pablogolobar/order_server:$(VERSION)
 

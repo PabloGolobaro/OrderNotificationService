@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"strconv"
 	"time"
 )
 
@@ -44,8 +45,26 @@ func (o *Order) String() string {
 	for _, product := range o.Products {
 		data += product.String()
 	}
+	if o.TotalSum() == 0 {
+		return data
+	} else {
+		data += fmt.Sprintf("Сумма по заказу : <b>%.2fр.</b>\n", o.TotalSum())
+	}
+
 	return data
 }
+func (o *Order) TotalSum() float64 {
+	var sum float64
+	for _, product := range o.Products {
+		price, err := strconv.ParseFloat(product.Price, 32)
+		if err != nil {
+			return 0
+		}
+		sum += price * float64(product.Count)
+	}
+	return sum
+}
+
 func (p *Product) String() string {
 	return fmt.Sprintf("%v - %v\nВсего %v ед. - стоимость %vр. за ед.\n******************\n", p.Category, p.Title, p.Count, p.Price)
 }
